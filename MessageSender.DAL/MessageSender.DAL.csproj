@@ -55,16 +55,17 @@
   <ItemGroup>
     <Compile Include="Context\ApplicationContext.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Repositories\MessageManager.cs" />
-    <Compile Include="Repositories\PhoneManager.cs" />
-    <Compile Include="Repositories\UserManager.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\MessageRepository.cs" />
+    <Compile Include="Repositories\PhoneRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Entities\AdditInfo.cs" />
     <Compile Include="Entities\Massage.cs" />
     <Compile Include="Entities\MessegeRecipient.cs" />
     <Compile Include="Entities\Phone.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IdentityUnitOfWork.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

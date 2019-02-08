@@ -7,7 +7,7 @@ namespace MessageSender.BLL.Services
 	{
 		public IUserService CreateUserService(string connection)
 		{
-			return new UserService(new IdentityUnitOfWork(connection));
+			return new UserService(new UnitOfWork(connection));
 		}
 	}
 }

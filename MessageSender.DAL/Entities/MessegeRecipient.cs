@@ -10,10 +10,6 @@ namespace MessengeSending.Models
 		public int Id				{ get; set; }
 		public int MessageId		{ get; set; }
 		public int RecepientId		{ get; set; }
-		public DateTime CreateDate	{ get; set; }
-		public DateTime StartDate	{ get; set; }
-		public DateTime EndDate		{ get; set; }
-		public DateTime Period		{ get; set; }
 
 		[ForeignKey("MessageId")]
 		public Message Message		{ get; set; }

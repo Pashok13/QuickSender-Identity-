@@ -13,32 +13,32 @@ namespace MessageSender.BLL.Services
 {
 	public class UserService : IUserService
 	{
-		IdentityUnitOfWork Database { get; set; }
+		UnitOfWork Database { get; set; }
 
-		public UserService(IdentityUnitOfWork uow)
+		public UserService(UnitOfWork uow)
 		{
 			Database = uow;
 		}
 
 		public async Task<OperationDetails> Create(UserDTO userDto)
 		{
-			User user = await Database.UserManager.FindByEmailAsync(userDto.Email);
+			User user = await Database.UserRepository.FindByEmailAsync(userDto.Email);
 
 			if (user == null)
 			{
-				user = Database.UserManager.FindByPhone(userDto.Phone);
+				user = Database.UserRepository.FindByPhone(userDto.Phone);
 				if (user == null)
 				{
 					user = new User { Email = userDto.Email, UserName = userDto.Name, PhoneNumber = userDto.Phone };
-					var result = await Database.UserManager.CreateAsync(user, userDto.Password);
+					var result = await Database.UserRepository.CreateAsync(user, userDto.Password);
 
 					if (result.Errors.Count() > 0)
 						return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
 
-					if (Database.PhoneManager.FindByPhone(userDto.Phone) == null)
-						Database.PhoneManager.Create(userDto.Phone);
+					if (Database.PhoneRepository.FindByPhone(userDto.Phone) == null)
+						Database.PhoneRepository.CreateByPhone(userDto.Phone);
 
-					await Database.SaveAsync();
+					Database.Save();
 					return new OperationDetails(true, "Регистрация успешно пройдена", user.Id);
 				}
 				else 
@@ -55,9 +55,9 @@ namespace MessageSender.BLL.Services
 		public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
 		{
 			ClaimsIdentity claim = null;
-			User user = await Database.UserManager.FindAsync(userDto.Email, userDto.Password); 
+			User user = await Database.UserRepository.FindAsync(userDto.Email, userDto.Password); 
 			if (user != null)
-				claim = await Database.UserManager.CreateIdentityAsync(user,
+				claim = await Database.UserRepository.CreateIdentityAsync(user,
 											DefaultAuthenticationTypes.ApplicationCookie);
 			return claim;
 		}
@@ -65,12 +65,12 @@ namespace MessageSender.BLL.Services
 		public async Task<ClaimsIdentity> ConfirmEmail(string id)
 		{
 			ClaimsIdentity claim = null;
-			User user = Database.UserManager.FindById(id);
+			User user = Database.UserRepository.FindById(id);
 			if (user != null)
 			{
 				user.EmailConfirmed = true;
-				await Database.SaveAsync();
-				claim = await Database.UserManager.CreateIdentityAsync(user,
+				Database.Save();
+				claim = await Database.UserRepository.CreateIdentityAsync(user,
 											DefaultAuthenticationTypes.ApplicationCookie);
 			}
 			return claim;
