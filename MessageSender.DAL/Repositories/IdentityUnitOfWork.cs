@@ -1,43 +1,55 @@
 ﻿using MessageSender.DAL.Context;
-using MessageSender.DAL.Entities;
-using MessageSender.DAL.Interfaces;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Threading.Tasks;
-using MessageSender.DAL.Identity;
 
 namespace MessageSender.DAL.Repositories
 {
-	public class IdentityUnitOfWork : IUnitOfWork
+	public class IdentityUnitOfWork : IDisposable
 	{
+		//private UserManager userManager;
+		//private PhoneManager phoneManager;
+		//private MessageManager messageManager;
+
+		//public IdentityUnitOfWork(string connectionString)
+		//{
+		//	userManager		= new UserManager(connectionString);
+		//	phoneManager	= new PhoneManager(connectionString);
+		//	messageManager	= new MessageManager(connectionString);
+		//}
+
+		//public UserManager()
+		//{
+		//	get { return userManager}
+		//}
+
+		//public void Save()
+		//{
+		//	userManager.SaveChanges();
+		//	phoneManager.SaveChanges();
+		//	messageManager.SaveChanges();
+		//}
+
+		//public void Dispose()
+		//{ 
+		//	throw new NotImplementedException();
+		//}
+
 		private ApplicationContext db;
 
-		private ApplicationUserManager userManager;
+		private UserManager userManager;
 		//private ApplicationRoleManager roleManager;
-		private IClientManager clientManager;
 
 		public IdentityUnitOfWork(string connectionString)
 		{
 			db = new ApplicationContext(connectionString);
-			userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db), connectionString);
-			//roleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(db));
-			clientManager = new ClientManager(db);
+			userManager = new UserManager(connectionString);
 		}
 
-		public ApplicationUserManager UserManager
+		public UserManager UserManager
 		{
 			get { return userManager; }
 		}
-
-		public IClientManager ClientManager
-		{
-			get { return clientManager; }
-		}
-
-		//public ApplicationRoleManager RoleManager
-		//{
-		//	get { return roleManager; }
-		//}
 
 		public async Task SaveAsync()
 		{
@@ -57,12 +69,23 @@ namespace MessageSender.DAL.Repositories
 			{
 				if (disposing)
 				{
-					userManager.Dispose();
-					//roleManager.Dispose();
-					clientManager.Dispose();
+					//userManager.Dispose();
 				}
 				disposed = true;
 			}
 		}
+
+		//public virtual void Dispose(bool disposing)
+		//{
+		//	if (!disposed)
+		//	{
+		//		if (disposing)
+		//		{
+		//			userManager.Dispose();
+		//			phoneManager.Dispose();
+		//		}
+		//		disposed = true;
+		//	}
+		//}
 	}
 }

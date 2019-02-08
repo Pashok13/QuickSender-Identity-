@@ -54,24 +54,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\ApplicationContext.cs" />
-    <Compile Include="Entities\ApplicationRole.cs" />
-    <Compile Include="Entities\ApplicationUser.cs" />
-    <Compile Include="Entities\ClientProfile.cs" />
-    <Compile Include="Identity\ApplicationUserManager.cs" />
-    <Compile Include="Interfaces\IClientManager.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Repositories\MessageManager.cs" />
+    <Compile Include="Repositories\PhoneManager.cs" />
+    <Compile Include="Repositories\UserManager.cs" />
     <Compile Include="Entities\AdditInfo.cs" />
     <Compile Include="Entities\Massage.cs" />
     <Compile Include="Entities\MessegeRecipient.cs" />
     <Compile Include="Entities\Phone.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ClientManager.cs" />
     <Compile Include="Repositories\IdentityUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Identity\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

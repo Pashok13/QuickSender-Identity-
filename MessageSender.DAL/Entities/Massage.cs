@@ -14,7 +14,7 @@ namespace MessengeSending.Models
 		public string TextMessage   { get; set; }
 
         [ForeignKey("UserId")]
-		public ClientProfile User			{ get; set; }
+		public User User			{ get; set; }
 
 		public ICollection<MessegeRecipient> MessageRecipient { get; set; }
 

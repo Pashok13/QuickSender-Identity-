@@ -91,8 +91,7 @@ namespace MessageSender.Controllers
 				if (operationDetails.Succedeed)
 				{
 					SendConfirmMessage(operationDetails.Property, model.Email);
-					return RedirectToAction("Index", "Home");
-					//return RedirectToAction("Confirm", "Account", new { Email = model.Email });
+					return RedirectToAction("Confirm", "Account");
 				}
 				else
 					ModelState.AddModelError(operationDetails.Property, operationDetails.Message);
@@ -101,27 +100,27 @@ namespace MessageSender.Controllers
 		}
 
 		public void SendConfirmMessage(string id, string email)
-		{                   // наш email с заголовком письма
+		{                   
 			MailAddress from = new MailAddress("q.u.i.c.k.sender.r.r@gmail.com", "Quick sender");
-			// кому отправляем
 			MailAddress to = new MailAddress(email);
-			// создаем объект сообщения
 			MailMessage m = new MailMessage(from, to);
-			// тема письма
 			m.Subject = "Email confirmation";
-			// текст письма - включаем в него ссылку
 			m.Body = string.Format("For complete registration, go to the link:" +
 							"<a href=\"{0}\" title=\"Confirm email\">{0}</a>",
 				Url.Action("ConfirmEmail", "Account", new { Token = id, Email = email }, Request.Url.Scheme));
 			m.IsBodyHtml = true;
-			// адрес smtp-сервера, с которого мы и будем отправлять письмо
+
 			using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
 			{
-				// логин и пароль
 				smtp.Credentials = new System.Net.NetworkCredential("q.u.i.c.k.sender.r.r@gmail.com", "quicksender123");
 				smtp.EnableSsl = true;
 				smtp.Send(m);
 			}
+		}
+
+		public ActionResult Confirm()
+		{
+			return View();
 		}
 
 		public async Task<ActionResult> ConfirmEmail(string Token, string Email)
