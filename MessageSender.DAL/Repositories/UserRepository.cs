@@ -17,6 +17,7 @@ namespace MessageSender.DAL.Repositories
 		public UserRepository(IUserStore<User> store, ApplicationContext context) : base(store)
 		{
 			this.context = context;
+			this.dbSet = context.Set<User>();
 		}
 
 		public void Add(User entity)

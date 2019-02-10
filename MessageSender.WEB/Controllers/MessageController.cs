@@ -8,12 +8,6 @@ namespace MessageSender.WEB.Controllers
 {
     public class MessageController : Controller
     {
-        // GET: Message
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // GET: Message/Details/5
         public ActionResult Details(int id)
         {

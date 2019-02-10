@@ -18,6 +18,6 @@ namespace MessageSender.Models
 		[Compare("Password")]
 		public string ConfirmPassword { get; set; }
 		[Required]
-		public string Name { get; set; }
+		public string Login { get; set; }
 	}
 }

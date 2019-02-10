@@ -22,40 +22,40 @@ namespace MessageSender.BLL.Services
 
 		public async Task<OperationDetails> Create(UserDTO userDto)
 		{
-			User user = await Database.UserRepository.FindByEmailAsync(userDto.Email);
+			User user;
 
-			if (user == null)
-			{
-				user = Database.UserRepository.FindByPhone(userDto.Phone);
-				if (user == null)
-				{
-					user = new User { Email = userDto.Email, UserName = userDto.Name, PhoneNumber = userDto.Phone };
-					var result = await Database.UserRepository.CreateAsync(user, userDto.Password);
-
-					if (result.Errors.Count() > 0)
-						return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
-
-					if (Database.PhoneRepository.FindByPhone(userDto.Phone) == null)
-						Database.PhoneRepository.CreateByPhone(userDto.Phone);
-
-					Database.Save();
-					return new OperationDetails(true, "Регистрация успешно пройдена", user.Id);
-				}
-				else 
-				{
-					return new OperationDetails(false, "User with this phone number are already exist", "PhoneNumber");
-				}
-			}
-			else
+			if (Database.UserRepository.FindByEmail(userDto.Email) != null)
 			{
 				return new OperationDetails(false, "User with this e-mail are already exist", "Email");
 			}
+			else if (Database.UserRepository.FindByPhone(userDto.Phone) != null)
+			{
+				return new OperationDetails(false, "User with this phone number are already exist", "PhoneNumber");
+			}
+			else if(Database.UserRepository.FindByName(userDto.Login) != null)
+			{
+				return new OperationDetails(false, $"Name {userDto.Login} are already taken", "Login");
+			}
+			else
+			{ 
+				user = new User { Email = userDto.Email, UserName = userDto.Login, PhoneNumber = userDto.Phone };
+				var result = await Database.UserRepository.CreateAsync(user, userDto.Password);
+
+				if (result.Errors.Count() > 0)
+					return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
+
+				if (Database.PhoneRepository.FindByPhone(userDto.Phone) == null)
+					Database.PhoneRepository.CreateByPhone(userDto.Phone);
+
+				Database.Save();
+				return new OperationDetails(true, "Registration successfully", user.Id);
+			}		
 		}
 
 		public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
 		{
 			ClaimsIdentity claim = null;
-			User user = await Database.UserRepository.FindAsync(userDto.Email, userDto.Password); 
+			User user = await Database.UserRepository.FindAsync(userDto.Login, userDto.Password); 
 			if (user != null)
 				claim = await Database.UserRepository.CreateIdentityAsync(user,
 											DefaultAuthenticationTypes.ApplicationCookie);
@@ -76,6 +76,11 @@ namespace MessageSender.BLL.Services
 			return claim;
 		}
 
+		public void Dispose()
+		{
+			Database.Dispose();
+		}
+
 		//// начальная инициализация бд
 		//public async Task SetInitialData(UserDTO adminDto, List<string> roles)
 		//{
@@ -91,9 +96,5 @@ namespace MessageSender.BLL.Services
 		//	await Create(adminDto);
 		//}
 
-		public void Dispose()
-		{
-			Database.Dispose();
-		}
 	}
 }

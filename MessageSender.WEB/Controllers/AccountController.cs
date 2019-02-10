@@ -42,7 +42,7 @@ namespace MessageSender.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				UserDTO userDto = new UserDTO { Email = model.Email, Password = model.Password };
+				UserDTO userDto = new UserDTO { Login = model.Login, Password = model.Password };
 				ClaimsIdentity claim = await UserService.Authenticate(userDto);
 				if (claim == null)
 				{
@@ -82,7 +82,7 @@ namespace MessageSender.Controllers
 				{
 					Email = model.Email,
 					Password = model.Password,
-					Name = model.Name,
+					Login = model.Login,
 					Phone = model.PhoneNumber
 					//Role = "user"
 				};
